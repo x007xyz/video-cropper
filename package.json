@@ -1,0 +1,16 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Web端裁剪视频",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "release": "lerna version",
+    "publish": "lerna publish"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^8.1.3"
+  }
+}

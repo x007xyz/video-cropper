@@ -1,0 +1,26 @@
+{
+  "name": "@video-cropper/core",
+  "private": false,
+  "version": "0.0.0",
+  "main": "dist/core.umd.cjs",
+  "types": "dist/index.d.ts",
+  "module": "dist/core.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p build.tsconfig.json --outDir dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@webav/av-cliper": "^0.11.4"
+  }
+}
