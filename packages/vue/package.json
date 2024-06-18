@@ -1,6 +1,6 @@
 {
   "name": "@video-cropper/vue",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "private": false,
   "type": "module",
   "files": [
@@ -24,8 +24,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "vue": "^3.4.21",
-    "@video-cropper/core": "workspace:*"
+    "@video-cropper/core": "workspace:*",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
