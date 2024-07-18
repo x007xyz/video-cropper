@@ -88,7 +88,7 @@ function onTimeUpdate() {
 
 function onPlay() {
   // 点击播放时，设置充开始时间播放
-  videoRef.value.currentTime = start.value * unit.value / 1e6
+  videoRef.value && (videoRef.value.currentTime = start.value * unit.value / 1e6)
 }
 
 watch(() => props.url, async (val, oldVal) => {
@@ -126,7 +126,7 @@ watch(() => props.url, async (val, oldVal) => {
 
     if (props.startTime) {
       start.value = props.startTime * 1e3 / unit.value;
-      videoRef.value.currentTime = props.startTime / 1e3
+      videoRef.value && (videoRef.value.currentTime = props.startTime / 1e3)
     }
 
     end.value = width;

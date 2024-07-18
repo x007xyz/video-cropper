@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Cropper from "./components/Cropper/index.vue"
 
-function onClip(clip) {
+function onClip(clip: any) {
   console.log('clip', clip)
 }
 

@@ -92,7 +92,7 @@
     }
   }
 
-  function onClick(e) {
+  function onClick(e: Event) {
     console.log('🚀 ~ onClick ~ e:', e)
     e.stopPropagation()
   }
