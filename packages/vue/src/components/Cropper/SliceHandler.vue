@@ -34,7 +34,8 @@
     min: number,
     max: number,
     wrapperWidth: number,
-    wrapperHeight: number
+    wrapperHeight: number,
+    unit: number
   }>()
 
   const emits = defineEmits<{
@@ -45,7 +46,7 @@
 
   const width = computed(() => props.end - props.start)
 
-  // const duration = computed(() => parseInt(width.value / SECONDPXRATIO) + 's')
+  // const duration = computed(() => (width.value * props.unit / 1e6).toFixed(2) + 's')
 
   let isDragging = false
   function onMouseDown(event: MouseEvent, type: 'start' | 'end') {
@@ -137,5 +138,6 @@
     color: #ffffff;
     text-align: center;
     line-height: 40px;
+    background-color: rgba(0, 0, 0, 0.4);
   }
 </style>

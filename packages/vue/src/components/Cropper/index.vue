@@ -1,10 +1,10 @@
 <template>
   <div class="cropper-wrapper">
-    <video v-if="!$slots.default" ref="videoRef" :src="url" :width="videoWidth" :height="videoHeight" controls @timeupdate="onTimeUpdate"></video>
+    <video v-if="!$slots.default" ref="videoRef" :src="url" :width="videoWidth" :height="videoHeight" controls @timeupdate="onTimeUpdate" @play="onPlay"></video>
     <slot v-else></slot>
     <div class="timeline-wrapper" :style="{ height: trackHeight + 'px', width: trackWidth + 'px' }">
       <canvas ref="canvasRef" :width="trackWidth" :height="trackHeight"></canvas>
-      <SliceHandler v-if="!loading" :start="start" :end="end" :min="0" :max="tlWidth" :wrapperWidth="tlWidth" :wrapperHeight="tlHeight" @dragging="onDragging" @dragEnd="onDragEnd"></SliceHandler>
+      <SliceHandler v-if="!loading" :start="start" :end="end" :min="0" :max="tlWidth" :wrapperWidth="tlWidth" :wrapperHeight="tlHeight" @dragging="onDragging" @dragEnd="onDragEnd" :unit="unit"></SliceHandler>
       <div class="loader-wrapper" v-else>
         <div class="loader"></div>
       </div>
@@ -23,6 +23,8 @@ const props = withDefaults(defineProps<{
   trackWidth?: number | string,
   trackHeight?: number | string,
   url: string,
+  startTime: number
+  endTime: number
 }>(), {
   videoWidth: 640,
   videoHeight: 360,
@@ -55,6 +57,7 @@ const tlWidth = ref(0)
 const tlHeight = ref(0)
 
 function onDragging ({ slice, dragType } : { slice: { start: number, end: number }, dragType: 'start' | 'end' }) {
+  console.log("🚀 ~ onDragging ~ slice, dragType:", slice, dragType)
   start.value = slice.start;
   end.value = slice.end;
   if (videoRef.value) {
@@ -63,20 +66,29 @@ function onDragging ({ slice, dragType } : { slice: { start: number, end: number
 }
 
 function onDragEnd() {
-  emits('clip', { start: start.value * unit.value, end: end.value * unit.value })
+  emits('clip', { start: start.value * unit.value / 1e3, end: end.value * unit.value / 1e3 })
 }
 
 function onTimeUpdate() {
-  if (videoRef.value) {
-    if (videoRef.value.currentTime < start.value * unit.value / 1e6) {
+  if (videoRef.value && !videoRef.value.paused) {
+    // 因为视频时间不是精确的，所以固定精度进行对比
+    const currentTime = (videoRef.value.currentTime * 1e6).toFixed(2)
+    const startTime = (start.value * unit.value / 1e6).toFixed(2)
+    const endTime = (end.value * unit.value / 1e6).toFixed(2)
+    if (currentTime < startTime) {
       videoRef.value.currentTime = start.value * unit.value / 1e6
       videoRef.value.pause()
     }
-    if (videoRef.value.currentTime > end.value * unit.value / 1e6) {
+    if (currentTime > endTime) {
       videoRef.value.currentTime = end.value * unit.value / 1e6
       videoRef.value.pause()
     }
   }
+}
+
+function onPlay() {
+  // 点击播放时，设置充开始时间播放
+  videoRef.value.currentTime = start.value * unit.value / 1e6
 }
 
 watch(() => props.url, async (val, oldVal) => {
@@ -112,7 +124,16 @@ watch(() => props.url, async (val, oldVal) => {
 
     start.value = 0;
 
+    if (props.startTime) {
+      start.value = props.startTime * 1e3 / unit.value;
+      videoRef.value.currentTime = props.startTime / 1e3
+    }
+
     end.value = width;
+
+    if (props.endTime) {
+      end.value = props.endTime * 1e3 / unit.value;
+    }
 
     canvasRef.value!.getContext("bitmaprenderer")?.transferFromImageBitmap(info.bitmap)
 

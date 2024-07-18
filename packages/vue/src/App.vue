@@ -8,7 +8,7 @@ function onClip(clip) {
 </script>
 
 <template>
-  <Cropper url="https://bilibili.github.io/WebAV/video/bunny.mp4" @clip="onClip"></Cropper>
+  <Cropper url="https://bilibili.github.io/WebAV/video/bunny.mp4" @clip="onClip" :endTime="20 * 1e3" :startTime="10 * 1e3"></Cropper>
 </template>
 
 <style scoped>
